@@ -2,6 +2,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 // Safe debug: indicate whether BREVO key was loaded (do not print the key)
 console.log('BREVO_API_KEY present:', !!process.env.BREVO_API_KEY, 'length:', process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.length : 0);
+// Feature flag: enable or disable payments integration
+const ENABLE_PAYMENTS = process.env.ENABLE_PAYMENTS ? String(process.env.ENABLE_PAYMENTS).toLowerCase() !== 'false' : true;
+console.log('ENABLE_PAYMENTS:', ENABLE_PAYMENTS);
 // Import fetch with compatibility for node-fetch v2 (function) and v3 (ESM default).
 let fetch = undefined;
 try {
@@ -22,6 +25,18 @@ const app = express();
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
 app.use(cors());
+
+// If payments are disabled, reject any incoming requests to payment-related paths
+app.use((req, res, next) => {
+  if (!ENABLE_PAYMENTS) {
+    const p = req.path.toLowerCase();
+    if (p.includes('pay') || p.includes('payment') || p.includes('card')) {
+      console.log('Blocked payment route while ENABLE_PAYMENTS=false:', req.path);
+      return res.status(403).json({ error: 'Payments are disabled' });
+    }
+  }
+  next();
+});
 
 // Helper: quick base64-ish check (not exhaustive)
 function looksLikeBase64(s) {

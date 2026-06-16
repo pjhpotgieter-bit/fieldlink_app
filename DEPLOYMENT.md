@@ -7,6 +7,7 @@ Required environment variables
 - `BREVO_API_KEY` - API key for Brevo (set in the host's env, do NOT commit)
 - `BREVO_SENDER_EMAIL` - Optional sender email used by the service
 - `PORT` - Set by most cloud hosts automatically; `index.js` respects `process.env.PORT`
+ - `ENABLE_PAYMENTS` - Optional flag (true|false). Set to `false` to disable payment-related endpoints and UI.
 
 Heroku (quick)
 
