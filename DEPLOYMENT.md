@@ -50,3 +50,14 @@ Notes / recommendations
 - Keep `BREVO_API_KEY` as a secret in your host's environment settings.
 - Verify the server is reachable by visiting `/health` after deploy.
 - For high availability, use a managed host (Render, GCP, AWS Elastic Beanstalk, ECS, or similar).
+
+Vercel (no billing required for small apps)
+
+1. Connect your GitHub repo at https://vercel.com/new and pick the repository.
+2. Vercel will detect the `api/` folder and deploy serverless functions:
+	- `api/send-invoice.js` becomes `/api/send-invoice`
+	- `api/health.js` becomes `/api/health`
+3. Add project Environment Variables in Vercel dashboard: `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`, and optionally `ENABLE_PAYMENTS`.
+4. Function limits: if you send large base64 PDFs, choose a Vercel plan with higher execution time/memory or move attachments to cloud storage and send links instead.
+
+We included `vercel.json` with recommended function memory and timeout settings; push to `main` and Vercel will auto-deploy.
