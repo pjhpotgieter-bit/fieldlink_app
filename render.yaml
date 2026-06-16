@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: fieldlink-backend
+    env: node
+    plan: free
+    region: oregon
+    branch: main
+    root: /
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENABLE_PAYMENTS
+        value: "false"
+      - key: BREVO_SENDER_EMAIL
+        value: "fieldlink.farmerapp@gmail.com"
