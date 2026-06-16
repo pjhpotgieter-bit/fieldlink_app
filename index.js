@@ -92,10 +92,12 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => res.status(200).send('ok'));
 
 // Start server and add error handling
-const server = app.listen(3000, '0.0.0.0', () => {
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+const server = app.listen(PORT, HOST, () => {
   const addr = server.address();
-  const host = addr && addr.address ? addr.address : '0.0.0.0';
-  const port = addr && addr.port ? addr.port : 3000;
+  const host = addr && addr.address ? addr.address : HOST;
+  const port = addr && addr.port ? addr.port : PORT;
   console.log(`Backend listening on ${host}:${port}`);
 });
 
